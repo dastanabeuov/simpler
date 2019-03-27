@@ -19,7 +19,7 @@ module Simpler
         @text
       end
 
-      def template_path
+      def template_path # значение для заголовки из запроса @env(url)
         @env['simpler.template_path'] = "no template"
       end
 

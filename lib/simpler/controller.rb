@@ -16,7 +16,6 @@ module Simpler
       @request.env['simpler.action'] = action
 
       set_default_headers
-      get_params
 
       send(action)
       
@@ -25,15 +24,11 @@ module Simpler
       @response.finish
     end
 
-    private
-
-    def get_params
-      params.merge!(@request.env['params_stash'])
-    end
+    private 
 
     def set_custom_headers(headers)
-      headers.each do |header|
-        @response[header.first] = header.last
+      headers.each do |name, value|
+        @response[name] = value
       end
     end    
 

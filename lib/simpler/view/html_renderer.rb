@@ -10,7 +10,7 @@ module Simpler
         @env = env
       end
 
-      def render
+      def render(binding)
         template = File.read(template_path)
 
         ERB.new(template).result(binding)

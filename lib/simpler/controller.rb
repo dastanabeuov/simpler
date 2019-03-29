@@ -50,24 +50,17 @@ module Simpler
       View.new(@request.env).render(binding)
     end
 
-    def params
-      @request.params
-    end
-
-    def render(*options)
-      if options.first.kind_of?(String)
-        @request.env['simpler.template'] = options.first
-        @response['Content-Type'] = 'html'
-      elsif options.first.keys.first.kind_of?(Symbol)
-        @request.env['simpler.render_type'] = options.first.keys.first
-        @request.env['simpler.render_type_options'] = options.first.values.first
-        @response['Content-Type'] = 'text'
-      end
+    def render(template)
+      @request.env['simpler.template'] = template
     end
 
     def status(status_code)
       @response.status = status_code
     end    
+
+    def params
+      @request.params
+    end
 
   end
 end

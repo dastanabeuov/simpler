@@ -9,6 +9,7 @@ module Simpler
       @name = extract_name
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
+      @request.env['simpler.params'].merge!(@request.params)
     end
 
     def make_response(action)
@@ -24,13 +25,13 @@ module Simpler
       @response.finish
     end
 
-    private 
+    private
 
     def set_custom_headers(headers)
       headers.each do |name, value|
         @response[name] = value
       end
-    end    
+    end
 
     def extract_name
       self.class.name.match('(?<name>.+)Controller')[:name].downcase
@@ -52,6 +53,13 @@ module Simpler
 
     def render(template)
       @request.env['simpler.template'] = template
+      if conform(template)
+        @response['Content-Type'] = 'text/plain'
+      View.new(@request.env).render(binding) 
+    end
+
+    def conform(template)
+      template.class == Hash && (template.key?(:plain) || template.key(:inline))
     end
 
     def status(status_code)
@@ -59,7 +67,7 @@ module Simpler
     end    
 
     def params
-      @request.params
+      @request.env['simpler.params']
     end
 
   end
